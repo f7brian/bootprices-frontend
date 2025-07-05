@@ -76,7 +76,7 @@ export default function Navbar() {
                 <Image
                   src={logo}
                   className="w-full  md:w-[200px] lg:w-full object-cover"
-                  alt="logo"
+                  alt="BootPrices.com Logo"
                 />
               </Link>
             </div>
@@ -138,7 +138,7 @@ export default function Navbar() {
                         <Image
                           src={logo}
                           className="w-[200px] object-cover"
-                          alt="logo"
+                          alt="BootPrices.com Logo"
                         />
                       </Link>
                       <button
