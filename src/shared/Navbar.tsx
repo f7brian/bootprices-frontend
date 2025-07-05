@@ -99,9 +99,9 @@ export default function Navbar() {
               </nav>
 
               <div className="mt-1 text-right">
-                <p className="md:text-[16px] lg:text-[28px] text-black font-bold hidden lg:block">
+                <h1 className="md:text-[16px] lg:text-[28px] text-black font-bold hidden lg:block">
                   Compare Boot Prices for Work, Hiking, Western & More
-                </p>
+                </h1>
               </div>
             </div>
 
@@ -196,9 +196,9 @@ export default function Navbar() {
 
           {/* Mobile Tagline */}
           <div className="mt-1 md:hidden">
-            <p className="text-[14px] font-bold text-black">
+            <h1 className="text-[14px] font-bold text-black">
               Compare Boot Prices for Work, Hiking, Western & More
-            </p>
+            </h1>
           </div>
         </div>
       </div>
