@@ -82,10 +82,10 @@ export default function Contact({ className }: ContactSectionProps) {
               alt="email icon"
             />
           </div>
-          <h3 className="font-bold text-2xl mb-4">E-mail</h3>
+          <h3 className="font-bold text-2xl mb-4">Get In Touch</h3>
           <p className="text-lg text-grey mb-1">
-            General Inquiries:{" "}
-            <span className="text-secondary">support@.com</span>
+            714.351.5772:{" "}
+            <span className="text-secondary"><a href="mailto:bootprices@gmail.com" className="text-secondary hover:underline">bootprices@gmail.com</a></span>
           </p>
         </div>
 
@@ -99,12 +99,9 @@ export default function Contact({ className }: ContactSectionProps) {
           </div>
           <h3 className="font-bold text-2xl mb-4">Location</h3>
           <p className="text-lg text-grey mb-1">
-            Address is 2280, E Carriage Lane
+            2528 Wallace Ave. Fullerton, CA 92831
           </p>
-          <p className="text-lg text-grey">
-            Unit 91 Salt Lake, City Utah 84117.
-          </p>
-        </div>
+          </div>
       </div>
 
       <div className="bg-[#ffffffee] shadow-md rounded-lg p-8 max-w-3xl mx-auto">
