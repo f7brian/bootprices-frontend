@@ -84,7 +84,7 @@ export default function Contact({ className }: ContactSectionProps) {
           </div>
           <h3 className="font-bold text-2xl mb-4">Get In Touch</h3>
           <p className="text-lg text-grey mb-1">
-            714.351.5772:{" "}
+            714.351.5772{" "}
             <span className="text-secondary"><a href="mailto:bootprices@gmail.com" className="text-secondary hover:underline">bootprices@gmail.com</a></span>
           </p>
         </div>
