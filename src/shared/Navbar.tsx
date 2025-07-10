@@ -59,6 +59,8 @@ export default function Navbar() {
       pathname === href ? "text-[#9F6206]" : "text-black hover:text-[#9F6206]"
     );
 
+    // get token in cookies
+
   return (
     <header
       className={cn(
