@@ -21,7 +21,7 @@ export default function About() {
           About Content Not Available
         </h2>
         <p className="mt-2 text-gray-500">
-          We're sorry, but the about page content couldn't be loaded at this time.
+          We&apos;re sorry, but the about page content couldn&apos;t be loaded at this time.
         </p>
       </div>
     );
