@@ -90,7 +90,7 @@ export default function BlogPage() {
                 <p
                   className="text-gray-400  mb-3"
                   dangerouslySetInnerHTML={{
-                    __html: post.description.slice(0, 70) + "...",
+                    __html: post.description.slice(0, 180) + "...",
                   }}
                 ></p>
 

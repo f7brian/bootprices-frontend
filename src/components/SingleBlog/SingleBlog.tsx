@@ -32,7 +32,7 @@ export default function SingleBlog() {
               Blog
             </Link>
             <span>›</span>
-            <span className="text-gray-900">{singleBlog?.id}</span>
+            <span className="text-gray-900">{singleBlog?.title}</span>
           </div>
         </nav>
 

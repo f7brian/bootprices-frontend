@@ -73,7 +73,9 @@ export default function BlogSection() {
               {/* Description (Dangerous HTML) */}
               <div
                 className="text-gray-400 text-sm mb-3"
-                dangerouslySetInnerHTML={{ __html: post.description }}
+                dangerouslySetInnerHTML={{
+                  __html: post.description.slice(0, 205) + " ...",
+                }}
               />
 
               {/* Read More Link (optional slug) */}

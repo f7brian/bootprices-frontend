@@ -33,7 +33,7 @@ export default function ProductGrid() {
   const [selectedGenders, setSelectedGenders] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState("");
   const [minPrice, setMinPrice] = useState(0);
-  const [maxPrice, setMaxPrice] = useState(500);
+  const [maxPrice, setMaxPrice] = useState(50000);
   const [selectedPriceRange, setSelectedPriceRange] = useState("");
   // Add this state at the top with your other state declarations
   const [isPriceManuallyChanged, setIsPriceManuallyChanged] = useState(false);
@@ -283,7 +283,7 @@ export default function ProductGrid() {
                       <Slider
                         range
                         min={0}
-                        max={500}
+                        max={50000}
                         value={[minPrice, maxPrice]}
                         onChange={(value) => {
                           setMinPrice(value[0]);
@@ -322,12 +322,12 @@ export default function ProductGrid() {
 
                     {(isPriceManuallyChanged ||
                       minPrice !== 0 ||
-                      maxPrice !== 500) && (
+                      maxPrice !== 50000) && (
                       <div className="">
                         <button
                           onClick={() => {
                             setMinPrice(0);
-                            setMaxPrice(500);
+                            setMaxPrice(50000);
                             setSelectedPriceRange("");
                             setIsPriceManuallyChanged(false);
                             setPage(1);
@@ -587,7 +587,7 @@ export default function ProductGrid() {
                             <Slider
                               range
                               min={0}
-                              max={500}
+                              max={50000}
                               value={[minPrice, maxPrice]}
                               onChange={(value) => {
                                 setMinPrice(value[0]);
@@ -620,7 +620,7 @@ export default function ProductGrid() {
                               <button
                                 onClick={() => {
                                   setMinPrice(0);
-                                  setMaxPrice(500);
+                                  setMaxPrice(5000);
                                   setSelectedPriceRange("");
                                   setPage(1);
                                 }}
