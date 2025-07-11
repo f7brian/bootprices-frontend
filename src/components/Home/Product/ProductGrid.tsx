@@ -110,8 +110,7 @@ export default function ProductGrid() {
     "Riding",
     "Casual / Fashion",
   ];
-  const updateMultipleSearchParams = (paramsToUpdate: Record<string, string | undefined>) => 
-    {
+  const updateMultipleSearchParams = (paramsToUpdate: Record<string, string | undefined>) => {
 
     for (const key in paramsToUpdate) {
       const value = paramsToUpdate[key];
@@ -159,13 +158,12 @@ export default function ProductGrid() {
   const hasMoreBootStyles = allBootStyles.length > 10;
 
 
-
   const { data, isLoading } = useGetProductsQuery({
     page,
     brand: selectedBrand,
     category: selectedBootStyle,
     sortBy: sortBy,
-    minPrice: minPrice,
+    minPrice: sortBy === 'priceHighToLow' && maxPrice > 750 && minPrice < 100 ? 300 : minPrice,
     maxPrice: (maxPrice > 749 ? 2000 : maxPrice) || 2000,
     gender: selectedGenders.join(","),
   });
@@ -203,6 +201,7 @@ export default function ProductGrid() {
   };
 
   const handleSortChange = (sort: string) => {
+    // Price: High to Low
     updateMultipleSearchParams({
       page: '1',
       sortBy: sort
