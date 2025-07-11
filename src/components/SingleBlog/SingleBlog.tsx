@@ -11,13 +11,11 @@ import { usePathname } from "next/navigation";
 export default function SingleBlog() {
   const pathName = usePathname();
   const id = pathName.split("/").pop();
-  console.log("id", id);
 
   const { data } = useGetSingleBlogQuery(id);
 
   const singleBlog = data?.data;
 
-  console.log("data in single blog", data);
   return (
     <div className="bg-white pt-16 lg:pt-28">
       <div className="container mx-auto px-4">

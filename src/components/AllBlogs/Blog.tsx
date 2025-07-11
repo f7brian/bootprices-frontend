@@ -37,7 +37,6 @@ export default function BlogPage() {
     }
   }
 
-  console.log("blogsss", data)
 
   return (
     <div className="text-black">

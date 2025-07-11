@@ -5,10 +5,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/Checkbox";
 import { useGetProductsQuery } from "@/redux/api/productApi";
 import { Slider } from "antd";
-import { ArrowUpRight, ChevronLeft, ChevronRight, Filter } from "lucide-react";
+import { ArrowUpRight, ChevronLeft, ChevronRight, Filter, RotateCcw } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useSearchParams, useRouter } from 'next/navigation';
+import { useMemo, useState } from 'react';
 
 interface Product {
   ASIN: string;
@@ -24,16 +25,19 @@ interface Product {
 }
 
 export default function ProductGrid() {
-  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
-  const [page, setPage] = useState(1);
+  const searchParams = useSearchParams();
+  const params = new URLSearchParams(searchParams.toString());
 
-  const [selectedBrand, setSelectedBrand] = useState("");
-  const [selectedBootStyle, setSelectedBootStyle] = useState("");
+  const router = useRouter();
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+
+  // const [selectedBrand, setSelectedBrand] = useState("");
+  // const [selectedBootStyle, setSelectedBootStyle] = useState("");
   const [showAllBootStyles, setShowAllBootStyles] = useState(false);
-  const [selectedGenders, setSelectedGenders] = useState<string[]>([]);
-  const [sortBy, setSortBy] = useState("");
-  const [minPrice, setMinPrice] = useState(0);
-  const [maxPrice, setMaxPrice] = useState(50000);
+  // const [selectedGenders, setSelectedGenders] = useState<string[]>([]);
+  // const [sortBy, setSortBy] = useState("");
+  // const [minPrice, setMinPrice] = useState(0);
+  // const [maxPrice, setMaxPrice] = useState(50000);
   const [selectedPriceRange, setSelectedPriceRange] = useState("");
   // Add this state at the top with your other state declarations
   const [isPriceManuallyChanged, setIsPriceManuallyChanged] = useState(false);
@@ -42,37 +46,56 @@ export default function ProductGrid() {
   const allBrands = [
     "ARIAT",
     "Timberland",
+    "Durango",
     "Dr. Martens",
+    "Justin Boots",
+    "Tony Lama",
     "Columbia",
+    "Dan Post",
     "UGG",
+    "Laredo",
+    "Corral Boots",
     "Hunter",
+    "Roper",
     "Under Armour",
+    "Twisted X",
     "Nike",
     "Crocs",
     "adidas",
     "Skechers",
     "New Balance",
     "Carhartt",
+    "Smoky Mountain",
     "Wolverine",
     "Danner",
+    "Cody James",
     "Merrell",
+    "Old West Boots",
     "KEEN",
+    "Thursday Boot Co.",
+    "Double-H Boots",
     "Georgia Boot",
     "Thorogood",
+    "Tin Haul",
     "CAT",
     "ROCKY",
+    "Nocona Boots",
     "MUCK",
     "Steve Madden",
+    "Lucchese",
     "PUMA",
     "Vionic",
+    "Anderson Bean",
     "TOMS",
     "Lucky Brand",
+    "Boulet Boots",
     "Rockport",
-    "Dr.Scholl's",
+    "Dr. Scholl's",
+    "M&F Western / Blazin Roxx",
     "Clarks",
     "Hey Dude",
     "Cole Haan",
-    "LifeStride",
+    "LifeStride"
   ];
 
   // Static boot styles list
@@ -87,21 +110,46 @@ export default function ProductGrid() {
     "Riding",
     "Casual / Fashion",
   ];
+  const updateMultipleSearchParams = (paramsToUpdate: Record<string, string | undefined>) => 
+    {
 
+    for (const key in paramsToUpdate) {
+      const value = paramsToUpdate[key];
+      if (value !== undefined && value !== "") {
+        params.set(key, value);
+      } else {
+        params.delete(key);
+      }
+    }
+
+    router.push(`?${params.toString()}`, { scroll: false });
+  };
+
+  const resetAll = () => {
+    router.push('/', { scroll: false })
+  }
+
+  const selectedBrand = searchParams.get('brand') || '';
+  const selectedBootStyle = searchParams.get('category') || '';
+  const selectedGenders = useMemo(() => searchParams.get('gender')?.split(',') || [], [searchParams]);
+  const sortBy = searchParams.get('sortBy') || '';
+  const minPrice = parseInt(searchParams.get('minPrice') || '0');
+  const maxPrice = parseInt(searchParams.get('maxPrice') || '2000');
+  const page = parseInt(searchParams.get('page') || '1');
   // Gender options
   const genderOptions = ["Men", "Women", "Boys", "Girls", "Babies", "Unisex"];
 
   // Handle gender selection
-  const handleGenderChange = (gender: string) => {
-    setSelectedGenders((prev) => {
-      if (prev.includes(gender)) {
-        return prev.filter((g) => g !== gender);
-      } else {
-        return [...prev, gender];
-      }
-    });
-    setPage(1);
-  };
+  // const handleGenderChange = (gender: string) => {
+  //   setSelectedGenders((prev) => {
+  //     if (prev.includes(gender)) {
+  //       return prev.filter((g) => g !== gender);
+  //     } else {
+  //       return [...prev, gender];
+  //     }
+  //   });
+  //   setPage(1);
+  // };
 
   const displayedBrands = allBrands; // Show all brands with scroll
 
@@ -110,26 +158,71 @@ export default function ProductGrid() {
     : allBootStyles.slice(0, 10);
   const hasMoreBootStyles = allBootStyles.length > 10;
 
-  // Get filtered products based on selected brands and filters
+
+
   const { data, isLoading } = useGetProductsQuery({
     page,
     brand: selectedBrand,
     category: selectedBootStyle,
     sortBy: sortBy,
     minPrice: minPrice,
-    maxPrice: maxPrice,
+    maxPrice: (maxPrice > 749 ? 2000 : maxPrice) || 2000,
     gender: selectedGenders.join(","),
   });
 
   const products = data?.data?.result || [];
-
-  // clean price values
-
   const cleanPrice = (price: string | undefined): string => {
     if (!price) return "N/A";
 
-    // Remove any parenthetical price information like "(XX.XX/Count)"
     return price.replace(/\s*\([^)]*\)/g, "").trim();
+  };
+
+  const handleBrandChange = (brand: string) => {
+    updateMultipleSearchParams({
+      page: '1',
+      brand: brand
+    })
+  };
+
+  const handleBootStyleChange = (style: string) => {
+    updateMultipleSearchParams({
+      page: '1',
+      category: style
+    })
+  };
+
+  const handleGenderChange = (gender: string) => {
+    const current = selectedGenders;
+    const updated = current.includes(gender)
+      ? current.filter((g) => g !== gender)
+      : [...current, gender];
+    updateMultipleSearchParams({
+      page: '1',
+      gender: updated.join(',')
+    })
+  };
+
+  const handleSortChange = (sort: string) => {
+    updateMultipleSearchParams({
+      page: '1',
+      sortBy: sort
+    })
+  };
+
+  const handlePriceChange = (min: number, max: number) => {
+    updateMultipleSearchParams({
+      page: '1',
+      minPrice: min.toString(),
+      maxPrice: max.toString(),
+
+    })
+  };
+
+  const handlePageChange = (newPage: number) => {
+
+    updateMultipleSearchParams({
+      page: newPage.toString()
+    })
   };
 
   return (
@@ -159,13 +252,12 @@ export default function ProductGrid() {
             <div className="hidden lg:block lg:col-span-1">
               <div className="bg-[#f9ecda] border border-gray-200 rounded-lg p-6 space-y-6">
                 {/* Add Boot Styles Dropdown */}
-                <div>
+                <div className="flex gap-2">
                   <select
                     className="w-full p-3 border border-gray-300 rounded-md bg-white text-gray-700"
                     value={selectedBootStyle}
                     onChange={(e) => {
-                      setSelectedBootStyle(e.target.value);
-                      setPage(1);
+                      handleBootStyleChange(e.target.value);
                     }}
                   >
                     <option value="">All Boot Styles</option>
@@ -179,7 +271,17 @@ export default function ProductGrid() {
                     <option value="Riding">Riding</option>
                     <option value="Casual / Fashion">Casual / Fashion</option>
                   </select>
+                  {params.size > 0 && <Button
+                    onClick={resetAll}
+                    size={"icon"}
+                    className="bg-primary hover:bg-primary/90 text-white h-11 w-11 min-w-11"
+                  >
+                    <RotateCcw />
+                  </Button>}
                 </div>
+
+                {/* Reset All Filters Button */}
+
 
                 {/* Gender Filter */}
                 <div className="border-t border-gray-200">
@@ -215,10 +317,9 @@ export default function ProductGrid() {
                           id={brandName}
                           checked={selectedBrand === brandName}
                           onCheckedChange={() => {
-                            setSelectedBrand(
+                            handleBrandChange(
                               selectedBrand === brandName ? "" : brandName
                             );
-                            setPage(1);
                           }}
                         />
                         <label
@@ -245,10 +346,9 @@ export default function ProductGrid() {
                           id={bootStyle}
                           checked={selectedBootStyle === bootStyle}
                           onCheckedChange={() => {
-                            setSelectedBootStyle(
+                            handleBootStyleChange(
                               selectedBootStyle === bootStyle ? "" : bootStyle
                             );
-                            setPage(1);
                           }}
                         />
                         <label
@@ -276,20 +376,17 @@ export default function ProductGrid() {
                   <div className="space-y-4">
                     {/* Price Range Display */}
                     <div className=" text-gray-700 ">
-                      ${minPrice} – ${maxPrice}+
+                      ${minPrice} – ${maxPrice > 749 ? '750' : maxPrice} {maxPrice > 750 && '+'}
                     </div>
                     {/* Ant Design Slider */}
                     <div className="px-2 flex items-center space-x-3">
                       <Slider
                         range
                         min={0}
-                        max={50000}
+                        max={750}
                         value={[minPrice, maxPrice]}
                         onChange={(value) => {
-                          setMinPrice(value[0]);
-                          setMaxPrice(value[1]);
-                          setSelectedPriceRange("");
-                          setPage(1);
+                          handlePriceChange(value[0], value[1])
                         }}
                         className="flex-1"
                         trackStyle={[{ backgroundColor: "#0891b2" }]}
@@ -313,7 +410,7 @@ export default function ProductGrid() {
                         className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded border"
                         onClick={() => {
                           // Trigger search/filter update
-                          setPage(1);
+                          handlePageChange(1)
                         }}
                       >
                         Go
@@ -322,21 +419,19 @@ export default function ProductGrid() {
 
                     {(isPriceManuallyChanged ||
                       minPrice !== 0 ||
-                      maxPrice !== 50000) && (
-                      <div className="">
-                        <button
-                          onClick={() => {
-                            setMinPrice(0);
-                            setMaxPrice(50000);
-                            setSelectedPriceRange("");
-                            setIsPriceManuallyChanged(false);
-                            setPage(1);
-                          }}
-                          className="text-[#0891b2] hover:text-[#0890b291] cursor-pointer flex items-center space-x-1"
-                        >
-                          <span>Reset price range</span>
-                        </button>
-                        {/* <button
+                      maxPrice !== 750) && (
+                        <div className="">
+                          <button
+                            onClick={() => {
+                              handlePriceChange(0, 750)
+                              setSelectedPriceRange("");
+                              setIsPriceManuallyChanged(false);
+                            }}
+                            className="text-[#0891b2] hover:text-[#0890b291] cursor-pointer flex items-center space-x-1"
+                          >
+                            <span>Reset price range</span>
+                          </button>
+                          {/* <button
                           onClick={() => {
                             setMinPrice(0);
                             setMaxPrice(500);
@@ -348,51 +443,42 @@ export default function ProductGrid() {
                         >
                           ✕ Clear
                         </button> */}
-                      </div>
-                    )}
+                        </div>
+                      )}
                     {/* Price Range Text Options */}
                     <div className="space-y-1 pt-2 inline-flex flex-col">
                       <div
-                        className={` cursor-pointer hover:text-orange-600 ${
-                          selectedPriceRange === "up-to-80"
-                            ? "text-orange-600 "
-                            : "text-gray-700"
-                        }`}
+                        className={` cursor-pointer hover:text-orange-600 ${selectedPriceRange === "up-to-80"
+                          ? "text-orange-600 "
+                          : "text-gray-700"
+                          }`}
                         onClick={() => {
                           setSelectedPriceRange("up-to-80");
-                          setMinPrice(0);
-                          setMaxPrice(80);
-                          setPage(1);
+                          handlePriceChange(0, 80)
                         }}
                       >
                         Up to $80
                       </div>
                       <div
-                        className={` cursor-pointer hover:text-orange-600 ${
-                          selectedPriceRange === "80-to-100"
-                            ? "text-orange-600 "
-                            : "text-gray-700"
-                        }`}
+                        className={` cursor-pointer hover:text-orange-600 ${selectedPriceRange === "80-to-100"
+                          ? "text-orange-600 "
+                          : "text-gray-700"
+                          }`}
                         onClick={() => {
                           setSelectedPriceRange("80-to-100");
-                          setMinPrice(80);
-                          setMaxPrice(100);
-                          setPage(1);
+                          handlePriceChange(80, 100)
                         }}
                       >
                         $80 to $100
                       </div>
                       <div
-                        className={` cursor-pointer hover:text-orange-600 ${
-                          selectedPriceRange === "100-above"
-                            ? "text-orange-600 "
-                            : "text-gray-700"
-                        }`}
+                        className={` cursor-pointer hover:text-orange-600 ${selectedPriceRange === "100-above"
+                          ? "text-orange-600 "
+                          : "text-gray-700"
+                          }`}
                         onClick={() => {
                           setSelectedPriceRange("100-above");
-                          setMinPrice(100);
-                          setMaxPrice(500);
-                          setPage(1);
+                          handlePriceChange(100, 750)
                         }}
                       >
                         $100 & above
@@ -407,8 +493,8 @@ export default function ProductGrid() {
                     className="w-full p-3 border border-gray-300 rounded-md bg-white text-gray-700 mt-4"
                     value={sortBy}
                     onChange={(e) => {
-                      setSortBy(e.target.value);
-                      setPage(1);
+                      handleSortChange(e.target.value);
+
                     }}
                   >
                     <option value="">Sort By</option>
@@ -446,8 +532,7 @@ export default function ProductGrid() {
                           className="w-full p-3 border border-gray-300 rounded-md bg-white text-gray-700"
                           value={selectedBootStyle}
                           onChange={(e) => {
-                            setSelectedBootStyle(e.target.value);
-                            setPage(1);
+                            handleBootStyleChange(e.target.value);
                             // setIsMobileFilterOpen(false);
                           }}
                         >
@@ -508,12 +593,11 @@ export default function ProductGrid() {
                                   id={`${brandName}-mobile`}
                                   checked={selectedBrand === brandName}
                                   onCheckedChange={() => {
-                                    setSelectedBrand(
+                                    handleBrandChange(
                                       selectedBrand === brandName
                                         ? ""
                                         : brandName
                                     );
-                                    setPage(1);
                                   }}
                                 />
                                 <label
@@ -545,12 +629,11 @@ export default function ProductGrid() {
                                 id={`${bootStyle}-mobile`}
                                 checked={selectedBootStyle === bootStyle}
                                 onCheckedChange={() => {
-                                  setSelectedBootStyle(
+                                  handleBootStyleChange(
                                     selectedBootStyle === bootStyle
                                       ? ""
                                       : bootStyle
                                   );
-                                  setPage(1);
                                 }}
                               />
                               <label
@@ -581,20 +664,18 @@ export default function ProductGrid() {
                         <h3 className="text-gray-900 mb-3">Price</h3>
                         <div className="space-y-4">
                           <div className="text-gray-700">
-                            ${minPrice} – ${maxPrice}+
+                            ${minPrice} – ${maxPrice > 749 ? '750' : maxPrice} {maxPrice > 750 && '+'}
                           </div>
                           <div className="px-2 flex items-center space-x-3">
                             <Slider
                               range
                               min={0}
-                              max={50000}
+                              max={750}
                               value={[minPrice, maxPrice]}
                               onChange={(value) => {
-                                setMinPrice(value[0]);
-                                setMaxPrice(value[1]);
+                                handlePriceChange(value[0], value[1])
                                 setSelectedPriceRange("");
                                 setIsPriceManuallyChanged(true);
-                                setPage(1);
                               }}
                               className="flex-1"
                               trackStyle={[{ backgroundColor: "#0891b2" }]}
@@ -619,10 +700,8 @@ export default function ProductGrid() {
                             <div className="">
                               <button
                                 onClick={() => {
-                                  setMinPrice(0);
-                                  setMaxPrice(5000);
+                                  handlePriceChange(0, 750)
                                   setSelectedPriceRange("");
-                                  setPage(1);
                                 }}
                                 className="text-sm text-blue-600 hover:text-blue-800 cursor-pointer flex items-center space-x-1"
                               >
@@ -632,46 +711,37 @@ export default function ProductGrid() {
                           )}
                           <div className="space-y-1 pt-2">
                             <div
-                              className={`cursor-pointer hover:text-orange-600 ${
-                                selectedPriceRange === "up-to-80"
-                                  ? "text-orange-600"
-                                  : "text-gray-700"
-                              }`}
+                              className={`cursor-pointer hover:text-orange-600 ${selectedPriceRange === "up-to-80"
+                                ? "text-orange-600"
+                                : "text-gray-700"
+                                }`}
                               onClick={() => {
                                 setSelectedPriceRange("up-to-80");
-                                setMinPrice(0);
-                                setMaxPrice(80);
-                                setPage(1);
+                                handlePriceChange(0, 80)
                               }}
                             >
                               Up to $80
                             </div>
                             <div
-                              className={`cursor-pointer hover:text-orange-600 ${
-                                selectedPriceRange === "80-to-100"
-                                  ? "text-orange-600"
-                                  : "text-gray-700"
-                              }`}
+                              className={`cursor-pointer hover:text-orange-600 ${selectedPriceRange === "80-to-100"
+                                ? "text-orange-600"
+                                : "text-gray-700"
+                                }`}
                               onClick={() => {
                                 setSelectedPriceRange("80-to-100");
-                                setMinPrice(80);
-                                setMaxPrice(100);
-                                setPage(1);
+                                handlePriceChange(80, 100)
                               }}
                             >
                               $80 to $100
                             </div>
                             <div
-                              className={`cursor-pointer hover:text-orange-600 ${
-                                selectedPriceRange === "100-above"
-                                  ? "text-orange-600"
-                                  : "text-gray-700"
-                              }`}
+                              className={`cursor-pointer hover:text-orange-600 ${selectedPriceRange === "100-above"
+                                ? "text-orange-600"
+                                : "text-gray-700"
+                                }`}
                               onClick={() => {
                                 setSelectedPriceRange("100-above");
-                                setMinPrice(100);
-                                setMaxPrice(500);
-                                setPage(1);
+                                handlePriceChange(100, 750)
                               }}
                             >
                               $100 & above
@@ -686,8 +756,7 @@ export default function ProductGrid() {
                           className="w-full p-3 border border-gray-300 rounded-md bg-white text-gray-700"
                           value={sortBy}
                           onChange={(e) => {
-                            setSortBy(e.target.value);
-                            setPage(1);
+                            handleSortChange(e.target.value);
                           }}
                         >
                           <option value="">Sort By</option>
@@ -805,7 +874,7 @@ export default function ProductGrid() {
                           className="flex-1 max-w-[120px]"
                           disabled={page === 1}
                           onClick={() =>
-                            setPage((prev) => Math.max(prev - 1, 1))
+                            handlePageChange(Math.max(page - 1, 1))
                           }
                         >
                           <ChevronLeft className="h-4 w-4 mr-1" />
@@ -818,7 +887,7 @@ export default function ProductGrid() {
                           className="flex-1 max-w-[120px]"
                           disabled={page === 10}
                           onClick={() =>
-                            setPage((prev) => Math.min(prev + 1, 10))
+                            handlePageChange(Math.max(page + 1, 10))
                           }
                         >
                           Next
@@ -834,7 +903,7 @@ export default function ProductGrid() {
                           className="p-2"
                           disabled={page === 1}
                           onClick={() =>
-                            setPage((prev) => Math.max(prev - 1, 1))
+                            handlePageChange(Math.max(page - 1, 1))
                           }
                         >
                           <ChevronLeft className="h-4 w-4" />
@@ -855,7 +924,7 @@ export default function ProductGrid() {
                                     ? "bg-orange-500 text-white border-orange-500"
                                     : ""
                                 }
-                                onClick={() => setPage(pageNumber)}
+                                onClick={() => handlePageChange(pageNumber)}
                               >
                                 {pageNumber}
                               </Button>
@@ -870,7 +939,7 @@ export default function ProductGrid() {
                               <Button
                                 variant="outline"
                                 size="sm"
-                                onClick={() => setPage(1)}
+                                onClick={() => handlePageChange(1)}
                               >
                                 1
                               </Button>
@@ -892,7 +961,7 @@ export default function ProductGrid() {
                                     ? "bg-orange-500 text-white border-orange-500"
                                     : ""
                                 }
-                                onClick={() => setPage(pageNumber)}
+                                onClick={() => handlePageChange(pageNumber)}
                               >
                                 {pageNumber}
                               </Button>
@@ -907,7 +976,7 @@ export default function ProductGrid() {
                               <Button
                                 variant="outline"
                                 size="sm"
-                                onClick={() => setPage(10)}
+                                onClick={() => handlePageChange(10)}
                               >
                                 10
                               </Button>
@@ -921,7 +990,7 @@ export default function ProductGrid() {
                           className="p-2"
                           disabled={page === 10}
                           onClick={() =>
-                            setPage((prev) => Math.min(prev + 1, 10))
+                            handlePageChange(Math.min(page + 1, 10))
                           }
                         >
                           Next
