@@ -12,6 +12,7 @@ interface allBlog {
   date: string;
   time: string;
   description: string;
+  slug: string
 }
 
 export default function BlogSection() {
@@ -29,12 +30,12 @@ export default function BlogSection() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           {blogPosts.map((post: allBlog) => {
-            const encodedTitle = encodeURIComponent(post.title);
+            // const post.slug = encodeURIComponent(post.title);
           return(
               <div key={post.id} className="mb-8">
               {/* Blog Image */}
               <div className="aspect-[4/3] relative mb-4 overflow-hidden">
-                <Link href={`/blog/${encodedTitle}`}>
+                <Link href={`/blog/${post.slug}`}>
                   <Image
                     src={post.photo || "/placeholder.svg"}
                     alt={post.title}
@@ -66,7 +67,7 @@ export default function BlogSection() {
               </div>
 
               {/* Title */}
-              <Link href={`/blog/${encodedTitle}`}>
+              <Link href={`/blog/${post.slug}`}>
                 <h2 className="text-xl font-bold text-black mb-2">
                   {post.title}
                 </h2>
@@ -82,7 +83,7 @@ export default function BlogSection() {
 
               {/* Read More Link (optional slug) */}
               <Link
-                href={`/blog/${encodedTitle}`} // update this if using slug
+                href={`/blog/${post.slug}`} // update this if using slug
                 className="inline-flex items-center text-black/90 hover:text-secondary text-sm font-medium"
               >
                 Read More
