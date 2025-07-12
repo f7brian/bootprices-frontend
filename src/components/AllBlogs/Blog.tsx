@@ -1,42 +1,56 @@
-"use client"
+"use client";
 
-import { useState } from "react"
+import { useState } from "react";
 // import { useGetBlogsQuery } from "@/hooks/use-blogs"
-import { ArrowUpRight, Calendar, ChevronLeft, ChevronRight, Clock } from "lucide-react"
-import Image, { type StaticImageData } from "next/image"
-import Link from "next/link"
-import { useGetBlogsQuery } from "@/redux/api/blogApi"
-import { BeautifulPageLoading } from "../ui/BeautifulSpinner"
+import {
+  ArrowUpRight,
+  Calendar,
+  ChevronLeft,
+  ChevronRight,
+  Clock,
+} from "lucide-react";
+import Image, { type StaticImageData } from "next/image";
+import Link from "next/link";
+import { useGetBlogsQuery } from "@/redux/api/blogApi";
+import { BeautifulPageLoading } from "../ui/BeautifulSpinner";
 // import { BeautifulPageLoading } from "./ui/beautiful-spinner"
 
 interface allBlog {
-  id: string
-  photo: StaticImageData | string
-  title: string
-  date: string
-  time: string
-  description: string
+  id: string;
+  photo: StaticImageData | string;
+  title: string;
+  date: string;
+  time: string;
+  description: string;
 }
 
+// // Helper function to convert title to slug
+// const createSlug = (title: string) => {
+//   return title
+//     // .toLowerCase()
+//     .replace(/[^\w\s-]/g, "")
+//     .replace(/\s+/g, "-")
+//     .replace(/-+/g, "-");
+// };
+
 export default function BlogPage() {
-  const [currentPage, setCurrentPage] = useState(1)
-  const limit = 12
+  const [currentPage, setCurrentPage] = useState(1);
+  const limit = 12;
 
   const { data, isLoading, error } = useGetBlogsQuery({
     page: currentPage,
     limit,
-  })
+  });
 
-  const blogs = data?.data?.result || []
-  const totalBlogs = data?.data?.meta?.total || 0
-  const totalPages = data?.data?.meta?.totalPage || 1
+  const blogs = data?.data?.result || [];
+  const totalBlogs = data?.data?.meta?.total || 0;
+  const totalPages = data?.data?.meta?.totalPage || 1;
 
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page)
+      setCurrentPage(page);
     }
-  }
-
+  };
 
   return (
     <div className="text-black">
@@ -44,65 +58,74 @@ export default function BlogPage() {
         {/* Blog Grid */}
         {isLoading ? (
           <div className="container mx-auto">
-            <BeautifulPageLoading text="Loading blog data..." variant="gradient" />
+            <BeautifulPageLoading
+              text="Loading blog data..."
+              variant="gradient"
+            />
           </div>
         ) : error ? (
           <p className="text-center text-red-500">Failed to load blogs.</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {blogs.map((post: allBlog) => (
-              <div key={post.id} className="mb-8">
-                {/* Blog Image */}
-                <div className="aspect-[4/3] relative mb-4 overflow-hidden">
-                  <Link href={`/blog/${post.id}`}>
-                    <Image
-                      src={post.photo || "/placeholder.svg"}
-                      alt={post.title}
-                      fill
-                      className="object-cover rounded-[4px]"
-                    />
+            {blogs.map((post: allBlog) => {
+              // const slug = createSlug(post?.title);
+              const encodedTitle = encodeURIComponent(post.title);
+              return (
+                <div key={post.id} className="mb-8">
+                  {/* Blog Image */}
+                  <div className="aspect-[4/3] relative mb-4 overflow-hidden">
+                    <Link href={`/blog/${encodedTitle}`}>
+                      <Image
+                        src={post.photo || "/placeholder.svg"}
+                        alt={post.title}
+                        fill
+                        className="object-cover rounded-[4px]"
+                      />
+                    </Link>
+                  </div>
+
+                  {/* Meta Information */}
+                  <div className="flex items-center justify-between space-x-4 text-gray-400 text-sm mb-2">
+                    <div className="flex items-center">
+                      <Calendar className="h-4 w-4 mr-1" />
+                      {new Date(post.date).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}
+                    </div>
+                    <div className="flex items-center">
+                      <Clock className="h-4 w-4 mr-1" />
+                      <span>{post.time} min read</span>
+                    </div>
+                  </div>
+
+                  {/* Title */}
+                  <Link href={`/blog/${encodedTitle}`}>
+                    <h2 className="text-xl font-bold text-black mb-2">
+                      {post.title}
+                    </h2>
+                  </Link>
+
+                  {/* Description */}
+                  <p
+                    className="text-gray-400  mb-3"
+                    dangerouslySetInnerHTML={{
+                      __html: post.description.slice(0, 180) + "...",
+                    }}
+                  ></p>
+
+                  {/* Read More Link */}
+                  <Link
+                    href={`/blog/${encodedTitle}`}
+                    className="inline-flex items-center text-black/90 hover:text-secondary text-sm font-medium"
+                  >
+                    Read More
+                    <ArrowUpRight className="ml-1 h-4 w-4" />
                   </Link>
                 </div>
-
-                {/* Meta Information */}
-                <div className="flex items-center justify-between space-x-4 text-gray-400 text-sm mb-2">
-                  <div className="flex items-center">
-                    <Calendar className="h-4 w-4 mr-1" />
-                    {new Date(post.date).toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
-                  </div>
-                  <div className="flex items-center">
-                    <Clock className="h-4 w-4 mr-1" />
-                    <span>{post.time} min read</span>
-                  </div>
-                </div>
-
-                {/* Title */}
-                <Link href={`/blog/${post.id}`}>
-                  <h2 className="text-xl font-bold text-black mb-2">{post.title}</h2>
-                </Link>
-
-                {/* Description */}
-                <p
-                  className="text-gray-400  mb-3"
-                  dangerouslySetInnerHTML={{
-                    __html: post.description.slice(0, 180) + "...",
-                  }}
-                ></p>
-
-                {/* Read More Link */}
-                <Link
-                  href={`/blog/${post.id}`}
-                  className="inline-flex items-center text-black/90 hover:text-secondary text-sm font-medium"
-                >
-                  Read More
-                  <ArrowUpRight className="ml-1 h-4 w-4" />
-                </Link>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
 
@@ -151,5 +174,5 @@ export default function BlogPage() {
         )}
       </div>
     </div>
-  )
+  );
 }

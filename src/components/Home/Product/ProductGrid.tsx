@@ -5,11 +5,17 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/Checkbox";
 import { useGetProductsQuery } from "@/redux/api/productApi";
 import { Slider } from "antd";
-import { ArrowUpRight, ChevronLeft, ChevronRight, Filter, RotateCcw } from "lucide-react";
+import {
+  ArrowUpRight,
+  ChevronLeft,
+  ChevronRight,
+  Filter,
+  RotateCcw,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useSearchParams, useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useSearchParams, useRouter } from "next/navigation";
+import { useMemo, useState } from "react";
 
 interface Product {
   ASIN: string;
@@ -95,7 +101,7 @@ export default function ProductGrid() {
     "Clarks",
     "Hey Dude",
     "Cole Haan",
-    "LifeStride"
+    "LifeStride",
   ];
 
   // Static boot styles list
@@ -110,8 +116,9 @@ export default function ProductGrid() {
     "Riding",
     "Casual / Fashion",
   ];
-  const updateMultipleSearchParams = (paramsToUpdate: Record<string, string | undefined>) => {
-
+  const updateMultipleSearchParams = (
+    paramsToUpdate: Record<string, string | undefined>
+  ) => {
     for (const key in paramsToUpdate) {
       const value = paramsToUpdate[key];
       if (value !== undefined && value !== "") {
@@ -125,16 +132,19 @@ export default function ProductGrid() {
   };
 
   const resetAll = () => {
-    router.push('/', { scroll: false })
-  }
+    router.push("/", { scroll: false });
+  };
 
-  const selectedBrand = searchParams.get('brand') || '';
-  const selectedBootStyle = searchParams.get('category') || '';
-  const selectedGenders = useMemo(() => searchParams.get('gender')?.split(',') || [], [searchParams]);
-  const sortBy = searchParams.get('sortBy') || '';
-  const minPrice = parseInt(searchParams.get('minPrice') || '0');
-  const maxPrice = parseInt(searchParams.get('maxPrice') || '2000');
-  const page = parseInt(searchParams.get('page') || '1');
+  const selectedBrand = searchParams.get("brand") || "";
+  const selectedBootStyle = searchParams.get("category") || "";
+  const selectedGenders = useMemo(
+    () => searchParams.get("gender")?.split(",") || [],
+    [searchParams]
+  );
+  const sortBy = searchParams.get("sortBy") || "";
+  const minPrice = parseInt(searchParams.get("minPrice") || "0");
+  const maxPrice = parseInt(searchParams.get("maxPrice") || "2000");
+  const page = parseInt(searchParams.get("page") || "1");
   // Gender options
   const genderOptions = ["Men", "Women", "Boys", "Girls", "Babies", "Unisex"];
 
@@ -157,13 +167,15 @@ export default function ProductGrid() {
     : allBootStyles.slice(0, 10);
   const hasMoreBootStyles = allBootStyles.length > 10;
 
-
   const { data, isLoading } = useGetProductsQuery({
     page,
     brand: selectedBrand,
     category: selectedBootStyle,
     sortBy: sortBy,
-    minPrice: sortBy === 'priceHighToLow' && maxPrice > 750 && minPrice < 100 ? 300 : minPrice,
+    minPrice:
+      sortBy === "priceHighToLow" && maxPrice > 750 && minPrice < 100
+        ? 300
+        : minPrice,
     maxPrice: (maxPrice > 749 ? 2000 : maxPrice) || 2000,
     gender: selectedGenders.join(","),
   });
@@ -177,16 +189,16 @@ export default function ProductGrid() {
 
   const handleBrandChange = (brand: string) => {
     updateMultipleSearchParams({
-      page: '1',
-      brand: brand
-    })
+      page: "1",
+      brand: brand,
+    });
   };
 
   const handleBootStyleChange = (style: string) => {
     updateMultipleSearchParams({
-      page: '1',
-      category: style
-    })
+      page: "1",
+      category: style,
+    });
   };
 
   const handleGenderChange = (gender: string) => {
@@ -195,33 +207,31 @@ export default function ProductGrid() {
       ? current.filter((g) => g !== gender)
       : [...current, gender];
     updateMultipleSearchParams({
-      page: '1',
-      gender: updated.join(',')
-    })
+      page: "1",
+      gender: updated.join(","),
+    });
   };
 
   const handleSortChange = (sort: string) => {
     // Price: High to Low
     updateMultipleSearchParams({
-      page: '1',
-      sortBy: sort
-    })
+      page: "1",
+      sortBy: sort,
+    });
   };
 
   const handlePriceChange = (min: number, max: number) => {
     updateMultipleSearchParams({
-      page: '1',
+      page: "1",
       minPrice: min.toString(),
       maxPrice: max.toString(),
-
-    })
+    });
   };
 
   const handlePageChange = (newPage: number) => {
-
     updateMultipleSearchParams({
-      page: newPage.toString()
-    })
+      page: newPage.toString(),
+    });
   };
 
   return (
@@ -235,6 +245,7 @@ export default function ProductGrid() {
               at no cost to you.
             </p>
           </div>
+
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
             {/* Mobile Filter Button */}
             <div className="lg:hidden mb-1 flex justify-end">
@@ -270,17 +281,18 @@ export default function ProductGrid() {
                     <option value="Riding">Riding</option>
                     <option value="Casual / Fashion">Casual / Fashion</option>
                   </select>
-                  {params.size > 0 && <Button
-                    onClick={resetAll}
-                    size={"icon"}
-                    className="bg-primary hover:bg-primary/90 text-white h-11 w-11 min-w-11"
-                  >
-                    <RotateCcw />
-                  </Button>}
+                  {params.size > 0 && (
+                    <Button
+                      onClick={resetAll}
+                      size={"icon"}
+                      className="bg-primary hover:bg-primary/90 text-white h-11 w-11 min-w-11"
+                    >
+                      <RotateCcw />
+                    </Button>
+                  )}
                 </div>
 
                 {/* Reset All Filters Button */}
-
 
                 {/* Gender Filter */}
                 <div className="border-t border-gray-200">
@@ -375,7 +387,8 @@ export default function ProductGrid() {
                   <div className="space-y-4">
                     {/* Price Range Display */}
                     <div className=" text-gray-700 ">
-                      ${minPrice} – ${maxPrice > 749 ? '750' : maxPrice} {maxPrice > 750 && '+'}
+                      ${minPrice} – ${maxPrice > 749 ? "750" : maxPrice}{" "}
+                      {maxPrice > 750 && "+"}
                     </div>
                     {/* Ant Design Slider */}
                     <div className="px-2 flex items-center space-x-3">
@@ -385,7 +398,7 @@ export default function ProductGrid() {
                         max={750}
                         value={[minPrice, maxPrice]}
                         onChange={(value) => {
-                          handlePriceChange(value[0], value[1])
+                          handlePriceChange(value[0], value[1]);
                         }}
                         className="flex-1"
                         trackStyle={[{ backgroundColor: "#0891b2" }]}
@@ -409,7 +422,7 @@ export default function ProductGrid() {
                         className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded border"
                         onClick={() => {
                           // Trigger search/filter update
-                          handlePageChange(1)
+                          handlePageChange(1);
                         }}
                       >
                         Go
@@ -419,65 +432,56 @@ export default function ProductGrid() {
                     {(isPriceManuallyChanged ||
                       minPrice !== 0 ||
                       maxPrice !== 750) && (
-                        <div className="">
-                          <button
-                            onClick={() => {
-                              handlePriceChange(0, 750)
-                              setSelectedPriceRange("");
-                              setIsPriceManuallyChanged(false);
-                            }}
-                            className="text-[#0891b2] hover:text-[#0890b291] cursor-pointer flex items-center space-x-1"
-                          >
-                            <span>Reset price range</span>
-                          </button>
-                          {/* <button
+                      <div className="">
+                        <button
                           onClick={() => {
-                            setMinPrice(0);
-                            setMaxPrice(500);
+                            handlePriceChange(0, 750);
                             setSelectedPriceRange("");
-                            setIsPriceManuallyChanged(false); // Reset this flag
-                            setPage(1);
+                            setIsPriceManuallyChanged(false);
                           }}
-                          className="text-sm text-gray-600 hover:text-gray-800 cursor-pointer mt-1"
+                          className="text-[#0891b2] hover:text-[#0890b291] cursor-pointer flex items-center space-x-1"
                         >
-                          ✕ Clear
-                        </button> */}
-                        </div>
-                      )}
+                          <span>Reset price range</span>
+                        </button>
+                      </div>
+                    )}
                     {/* Price Range Text Options */}
                     <div className="space-y-1 pt-2 inline-flex flex-col">
                       <div
-                        className={` cursor-pointer hover:text-orange-600 ${selectedPriceRange === "up-to-80"
-                          ? "text-orange-600 "
-                          : "text-gray-700"
-                          }`}
+                        className={` cursor-pointer hover:text-orange-600 ${
+                          selectedPriceRange === "up-to-80"
+                            ? "text-orange-600 "
+                            : "text-gray-700"
+                        }`}
                         onClick={() => {
                           setSelectedPriceRange("up-to-80");
-                          handlePriceChange(0, 80)
+                          handlePriceChange(0, 80);
                         }}
                       >
                         Up to $80
                       </div>
                       <div
-                        className={` cursor-pointer hover:text-orange-600 ${selectedPriceRange === "80-to-100"
-                          ? "text-orange-600 "
-                          : "text-gray-700"
-                          }`}
+                        className={` cursor-pointer hover:text-orange-600 ${
+                          selectedPriceRange === "80-to-100"
+                            ? "text-orange-600 "
+                            : "text-gray-700"
+                        }`}
                         onClick={() => {
                           setSelectedPriceRange("80-to-100");
-                          handlePriceChange(80, 100)
+                          handlePriceChange(80, 100);
                         }}
                       >
                         $80 to $100
                       </div>
                       <div
-                        className={` cursor-pointer hover:text-orange-600 ${selectedPriceRange === "100-above"
-                          ? "text-orange-600 "
-                          : "text-gray-700"
-                          }`}
+                        className={` cursor-pointer hover:text-orange-600 ${
+                          selectedPriceRange === "100-above"
+                            ? "text-orange-600 "
+                            : "text-gray-700"
+                        }`}
                         onClick={() => {
                           setSelectedPriceRange("100-above");
-                          handlePriceChange(100, 750)
+                          handlePriceChange(100, 750);
                         }}
                       >
                         $100 & above
@@ -493,7 +497,6 @@ export default function ProductGrid() {
                     value={sortBy}
                     onChange={(e) => {
                       handleSortChange(e.target.value);
-
                     }}
                   >
                     <option value="">Sort By</option>
@@ -505,6 +508,8 @@ export default function ProductGrid() {
                 </div>
               </div>
             </div>
+
+            {/* mobile filter section start */}
 
             {/* Mobile Filter Modal */}
             {isMobileFilterOpen && (
@@ -526,7 +531,7 @@ export default function ProductGrid() {
                     </div>
                     <div className="space-y-6">
                       {/* Add Boot Styles Dropdown for Mobile */}
-                      <div className="px-6">
+                      <div className="px-6 flex items-center gap-4">
                         <select
                           className="w-full p-3 border border-gray-300 rounded-md bg-white text-gray-700"
                           value={selectedBootStyle}
@@ -550,6 +555,15 @@ export default function ProductGrid() {
                             Casual / Fashion
                           </option>
                         </select>
+                        {params.size > 0 && (
+                          <Button
+                            onClick={resetAll}
+                            size={"icon"}
+                            className="bg-primary hover:bg-primary/90 text-white h-11 w-11 min-w-11"
+                          >
+                            <RotateCcw />
+                          </Button>
+                        )}
                       </div>
 
                       {/* Gender Filter for Mobile */}
@@ -608,54 +622,59 @@ export default function ProductGrid() {
                               </div>
                             ))}
                           </div>
-                          {/* Linear gradient fade at bottom */}
-                          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#f9ecdae6] to-transparent pointer-events-none"></div>
-                          {/* Sticky dropshadow effect */}
+
+                          {/* Top shadow */}
                           <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-b from-black/10 to-transparent pointer-events-none"></div>
+
+                          {/* Bottom shadow - added this */}
+                          <div className="absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-t from-black/10 to-transparent pointer-events-none"></div>
                         </div>
                       </div>
 
                       {/* Boot Styles for Mobile */}
                       <div className="border-t border-gray-200 pt-4 px-6">
                         <h3 className="text-gray-900 mb-3">Boot Styles</h3>
-                        <div className="space-y-2">
-                          {displayedBootStyles.map((bootStyle: string) => (
-                            <div
-                              key={bootStyle}
-                              className="flex items-center space-x-2"
-                            >
-                              <Checkbox
-                                id={`${bootStyle}-mobile`}
-                                checked={selectedBootStyle === bootStyle}
-                                onCheckedChange={() => {
-                                  handleBootStyleChange(
-                                    selectedBootStyle === bootStyle
-                                      ? ""
-                                      : bootStyle
-                                  );
-                                }}
-                              />
-                              <label
-                                htmlFor={`${bootStyle}-mobile`}
-                                className="text-gray-700 cursor-pointer"
+                        <div className="relative">
+                          <div className="space-y-2 max-h-[450px] overflow-y-scroll pr-2">
+                            {displayedBootStyles.map((bootStyle: string) => (
+                              <div
+                                key={bootStyle}
+                                className="flex items-center space-x-2"
                               >
-                                {bootStyle}
-                              </label>
-                            </div>
-                          ))}
-                          {hasMoreBootStyles && (
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() =>
-                                setShowAllBootStyles(!showAllBootStyles)
-                              }
-                              className="w-full mt-2 text-orange-500 hover:text-orange-600 hover:bg-orange-50"
-                            >
-                              {showAllBootStyles ? "Show less" : "Show more"}
-                            </Button>
-                          )}
+                                <Checkbox
+                                  id={`${bootStyle}-mobile`}
+                                  checked={selectedBootStyle === bootStyle}
+                                  onCheckedChange={() => {
+                                    handleBootStyleChange(
+                                      selectedBootStyle === bootStyle
+                                        ? ""
+                                        : bootStyle
+                                    );
+                                  }}
+                                />
+                                <label
+                                  htmlFor={`${bootStyle}-mobile`}
+                                  className="text-gray-700 cursor-pointer"
+                                >
+                                  {bootStyle}
+                                </label>
+                              </div>
+                            ))}
+                          </div>
                         </div>
+
+                        {hasMoreBootStyles && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() =>
+                              setShowAllBootStyles(!showAllBootStyles)
+                            }
+                            className="w-full mt-2 text-orange-500 hover:text-orange-600 hover:bg-orange-50"
+                          >
+                            {showAllBootStyles ? "Show less" : "Show more"}
+                          </Button>
+                        )}
                       </div>
 
                       {/* Price Range for Mobile */}
@@ -663,7 +682,8 @@ export default function ProductGrid() {
                         <h3 className="text-gray-900 mb-3">Price</h3>
                         <div className="space-y-4">
                           <div className="text-gray-700">
-                            ${minPrice} – ${maxPrice > 749 ? '750' : maxPrice} {maxPrice > 750 && '+'}
+                            ${minPrice} – ${maxPrice > 749 ? "750" : maxPrice}{" "}
+                            {maxPrice > 750 && "+"}
                           </div>
                           <div className="px-2 flex items-center space-x-3">
                             <Slider
@@ -672,7 +692,7 @@ export default function ProductGrid() {
                               max={750}
                               value={[minPrice, maxPrice]}
                               onChange={(value) => {
-                                handlePriceChange(value[0], value[1])
+                                handlePriceChange(value[0], value[1]);
                                 setSelectedPriceRange("");
                                 setIsPriceManuallyChanged(true);
                               }}
@@ -699,7 +719,7 @@ export default function ProductGrid() {
                             <div className="">
                               <button
                                 onClick={() => {
-                                  handlePriceChange(0, 750)
+                                  handlePriceChange(0, 750);
                                   setSelectedPriceRange("");
                                 }}
                                 className="text-sm text-blue-600 hover:text-blue-800 cursor-pointer flex items-center space-x-1"
@@ -710,37 +730,40 @@ export default function ProductGrid() {
                           )}
                           <div className="space-y-1 pt-2">
                             <div
-                              className={`cursor-pointer hover:text-orange-600 ${selectedPriceRange === "up-to-80"
-                                ? "text-orange-600"
-                                : "text-gray-700"
-                                }`}
+                              className={`cursor-pointer hover:text-orange-600 ${
+                                selectedPriceRange === "up-to-80"
+                                  ? "text-orange-600"
+                                  : "text-gray-700"
+                              }`}
                               onClick={() => {
                                 setSelectedPriceRange("up-to-80");
-                                handlePriceChange(0, 80)
+                                handlePriceChange(0, 80);
                               }}
                             >
                               Up to $80
                             </div>
                             <div
-                              className={`cursor-pointer hover:text-orange-600 ${selectedPriceRange === "80-to-100"
-                                ? "text-orange-600"
-                                : "text-gray-700"
-                                }`}
+                              className={`cursor-pointer hover:text-orange-600 ${
+                                selectedPriceRange === "80-to-100"
+                                  ? "text-orange-600"
+                                  : "text-gray-700"
+                              }`}
                               onClick={() => {
                                 setSelectedPriceRange("80-to-100");
-                                handlePriceChange(80, 100)
+                                handlePriceChange(80, 100);
                               }}
                             >
                               $80 to $100
                             </div>
                             <div
-                              className={`cursor-pointer hover:text-orange-600 ${selectedPriceRange === "100-above"
-                                ? "text-orange-600"
-                                : "text-gray-700"
-                                }`}
+                              className={`cursor-pointer hover:text-orange-600 ${
+                                selectedPriceRange === "100-above"
+                                  ? "text-orange-600"
+                                  : "text-gray-700"
+                              }`}
                               onClick={() => {
                                 setSelectedPriceRange("100-above");
-                                handlePriceChange(100, 750)
+                                handlePriceChange(100, 750);
                               }}
                             >
                               $100 & above
