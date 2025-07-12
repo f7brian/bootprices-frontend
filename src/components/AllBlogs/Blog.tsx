@@ -22,16 +22,9 @@ interface allBlog {
   date: string;
   time: string;
   description: string;
+  slug: string
 }
 
-// // Helper function to convert title to slug
-// const createSlug = (title: string) => {
-//   return title
-//     // .toLowerCase()
-//     .replace(/[^\w\s-]/g, "")
-//     .replace(/\s+/g, "-")
-//     .replace(/-+/g, "-");
-// };
 
 export default function BlogPage() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -69,12 +62,12 @@ export default function BlogPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {blogs.map((post: allBlog) => {
               // const slug = createSlug(post?.title);
-              const encodedTitle = encodeURIComponent(post.title);
+          
               return (
                 <div key={post.id} className="mb-8">
                   {/* Blog Image */}
                   <div className="aspect-[4/3] relative mb-4 overflow-hidden">
-                    <Link href={`/blog/${encodedTitle}`}>
+                    <Link href={`/blog/${post.slug}`}>
                       <Image
                         src={post.photo || "/placeholder.svg"}
                         alt={post.title}
@@ -101,7 +94,7 @@ export default function BlogPage() {
                   </div>
 
                   {/* Title */}
-                  <Link href={`/blog/${encodedTitle}`}>
+                  <Link href={`/blog/${post.slug}`}>
                     <h2 className="text-xl font-bold text-black mb-2">
                       {post.title}
                     </h2>
@@ -117,7 +110,7 @@ export default function BlogPage() {
 
                   {/* Read More Link */}
                   <Link
-                    href={`/blog/${encodedTitle}`}
+                    href={`/blog/${post.slug}`}
                     className="inline-flex items-center text-black/90 hover:text-secondary text-sm font-medium"
                   >
                     Read More
