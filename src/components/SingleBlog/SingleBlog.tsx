@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
+import { useParams } from "next/navigation";
 import { useGetSingleBlogQuery } from "@/redux/api/blogApi";
 import { Calendar } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { BeautifulPageLoading } from "../ui/BeautifulSpinner"; // Import your loading component
 import { Skeleton } from "antd";
 // import { Skeleton } from "../ui/skeleton"; // Import skeleton component if available
@@ -13,8 +13,8 @@ import { Skeleton } from "antd";
 
 
 export default function SingleBlog() {
-  const pathName = usePathname();
-  const slug = pathName.split("/").pop() || "";
+  const params = useParams();
+const slug = params?.slug as string;
 
   // Use the slug for the API request
   const { data, isLoading, isError, error } = useGetSingleBlogQuery(slug);
