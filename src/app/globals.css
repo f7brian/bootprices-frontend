@@ -41,24 +41,7 @@ body {
 
 
 
-/* Base style (applies to all browsers) */
-.padding-bottom {
-  padding-bottom: 20px;
-}
 
-/* Safari-only tweak */
-@supports (-webkit-touch-callout: none) {
-  .padding-bottom {
-    padding-bottom: 30px; /* Safari-specific padding */
-  }
-}
-
-/* Firefox-only tweak */
-@supports (-moz-appearance: none) {
-  .padding-bottom {
-    padding-bottom: 25px; /* Firefox-specific padding */
-  }
-}
 
 
 /* h1,
