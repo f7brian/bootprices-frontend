@@ -65,7 +65,7 @@ export default function Navbar() {
     <header
       className={cn(
         "text-black fixed top-0 left-0 right-0 z-50 transition-all  duration-300",
-        isScrolled ? "bg-white shadow-md pb-5 md:pb-9" : "bg-transparent"
+        isScrolled ? "bg-white shadow-md padding-bottom" : "bg-transparent"
       )}
     >
 
@@ -199,7 +199,7 @@ export default function Navbar() {
 
           {/* Mobile Tagline */}
           <div className="mt-1 md:hidden">
-            <h1 className="text-[13px] font-bold text-black">
+            <h1 className="text-[14px] font-bold text-black">
               Compare Boot Prices for Work, Hiking, Western & More
             </h1>
           </div>
