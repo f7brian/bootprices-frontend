@@ -68,6 +68,7 @@ export default function Navbar() {
         isScrolled ? "bg-white shadow-md pb-5 md:pb-9" : "bg-transparent"
       )}
     >
+
       <div className="container mx-auto px-4 pt-5">
         <div className="flex flex-col">
           {/* Top row */}
