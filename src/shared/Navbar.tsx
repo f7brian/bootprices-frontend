@@ -198,7 +198,7 @@ export default function Navbar() {
 
           {/* Mobile Tagline */}
           <div className="mt-1 md:hidden">
-            <h1 className="text-[14px] font-bold text-black">
+            <h1 className="text-[13px] font-bold text-black">
               Compare Boot Prices for Work, Hiking, Western & More
             </h1>
           </div>
