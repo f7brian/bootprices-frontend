@@ -12,7 +12,7 @@ export default function Footer() {
           <div className="lg:col-span-1">
             <div className="flex flex-col items-start gap-4 mb-4">
               <Link href="/" className="text-2xl font-bold">
-              <Image src={footerLogo} className="h-12 object-contain" alt="footer_logo"/>
+              <Image src={footerLogo} className="h-12 w-auto object-contain m-0 p-0" alt="footer_logo"/>
             </Link>
             <p className="text-gray-300 text-sm leading-relaxed">
               BootPrices helps you compare and find the best deals on high-quality boots across trusted retailers.
