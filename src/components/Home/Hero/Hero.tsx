@@ -23,7 +23,7 @@ export default function HeroSection() {
               best brands.
             </h1>
             <Link
-              href={`https://www.amazon.com/s?k=boots&language=en_US&crid=2YJMZAXV4N6ZQ&linkCode=ll2&linkId=2e736eb5059606b71be437ad3c19ca10&sprefix=bo%2Caps%2C312&tag=countrydancin-20&ref=as_li_ss_tl`}
+              href={`https://www.amazon.com/s?k=boots&crid=3US1ODTVJGBSW&sprefix=boots%2Caps%2C181&linkCode=ll2&tag=bootprices-20&linkId=e25fee3243815cd308a1e76e114f93be&language=en_US&ref_=as_li_ss_tl`}
               target="_blank"
               className="bg-secondary hover:bg-primary text-white px-8  md:px-10 py-4 text-xl rounded-md "
             >
