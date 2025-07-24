@@ -111,7 +111,7 @@ export default function Footer() {
       </div>
 
       {/* Amazon Disclaimers */}
-<div className="text-center text-xs text-gray-400 leading-relaxed mx-auto mt-6 px-4 space-y-1.5">
+<div className="text-center text-xs text-gray-400 leading-relaxed mx-auto mt-6 mb-20 px-4 space-y-1.5">
   <div>As an Amazon Associate, I earn from qualifying purchases. This site contains affiliate links, which may earn a small commission at no cost to you.</div>
   <div>Price accurate as of your search. Amazon prices and availability are subject to change.</div>
   <div className="font-semibold tracking-wide uppercase">CERTAIN CONTENT THAT APPEARS ON THIS SITE COMES FROM AMAZON. THIS CONTENT IS PROVIDED ‘AS IS’ AND IS SUBJECT TO CHANGE OR REMOVAL AT ANY TIME.</div>
