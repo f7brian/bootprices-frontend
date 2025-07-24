@@ -110,6 +110,17 @@ export default function Footer() {
         </div>
       </div>
 
+      {/* Amazon Disclaimers */}
+<div className="text-center text-xs text-gray-400 leading-relaxed max-w-3xl mx-auto mt-6 px-4">
+  <p>
+    As an Amazon Associate, I earn from qualifying purchases. This site contains affiliate links, which may earn a small commission at no cost to you.<br />
+    Price accurate as of your search. Amazon prices and availability are subject to change.<br />
+    <span className="font-semibold tracking-wide uppercase">
+      CERTAIN CONTENT THAT APPEARS ON THIS SITE COMES FROM AMAZON. THIS CONTENT IS PROVIDED ‘AS IS’ AND IS SUBJECT TO CHANGE OR REMOVAL AT ANY TIME.
+    </span>
+  </p>
+</div>
+      
       {/* Copyright */}
       <div className="bg-[#A75202] py-4">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
