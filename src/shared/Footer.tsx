@@ -10,14 +10,14 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[40px] md:gap-[80px] lg:gap-[140px]">
           {/* Company Info */}
           <div className="lg:col-span-1">
-            <div className="mb-4">
+            <div className="flex flex-col items-start gap-4 mb-4">
               <Link href="/" className="text-2xl font-bold">
               <Image src={footerLogo} className="h-12 object-contain" alt="footer_logo"/>
-              </Link>
-            </div>
+            </Link>
             <p className="text-gray-300 text-sm leading-relaxed">
               BootPrices helps you compare and find the best deals on high-quality boots across trusted retailers.
             </p>
+          </div>    
           </div>
 
           {/* Quick Links */}
