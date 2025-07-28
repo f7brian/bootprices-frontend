@@ -9,7 +9,7 @@
         }
       ],
       "destination": "https://www.bootprices.com/:1",
-      "permanent": true
+      "statusCode": 308
     }
   ]
 }
