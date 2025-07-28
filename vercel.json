@@ -1,0 +1,15 @@
+{
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "bootprices.com"
+        }
+      ],
+      "destination": "https://www.bootprices.com/:1",
+      "permanent": true
+    }
+  ]
+}
