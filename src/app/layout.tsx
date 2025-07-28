@@ -45,6 +45,8 @@ export default function RootLayout({
             gtag('config', 'G-MXBVYBXDQY');
           `}
         </Script>
+        {/* Canonical URL */}
+        <link rel="canonical" href="https://www.bootprices.com/" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
