@@ -32,7 +32,22 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* Google tag (gtag.js) */}
+        {/* Canonical URL */}
+        <link rel="canonical" href="https://www.bootprices.com/" />
+        {/* 2. Open Graph Tags (Facebook) */}
+  <meta property="og:title" content="Compare Work, Hiking & Western Boot Prices | BootPrices.com" />
+  <meta property="og:description" content="Looking for boots? BootPrices.com makes it easy to compare prices on work boots, hiking boots, cowboy boots, and more—so you can save time and money." />
+  <meta property="og:image" content="https://www.bootprices.com/preview-boot-ad.jpg" />
+  <meta property="og:url" content="https://www.bootprices.com/" />
+  <meta property="og:type" content="website" />
+
+  {/* 3. Twitter Card Tags */}
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="BootPrices.com – Instantly Compare Boot Prices on Amazon" />
+  <meta name="twitter:description" content="Save time. Compare work, hiking, and cowboy boots from top brands—all in one place." />
+  <meta name="twitter:image" content="https://www.bootprices.com/preview-boot-ad.jpg" />
+
+        {/* 4. Google tag (gtag.js) */}
         <Script
           async
           src="https://www.googletagmanager.com/gtag/js?id=G-MXBVYBXDQY"
@@ -45,8 +60,6 @@ export default function RootLayout({
             gtag('config', 'G-MXBVYBXDQY');
           `}
         </Script>
-        {/* Canonical URL */}
-        <link rel="canonical" href="https://www.bootprices.com/" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
