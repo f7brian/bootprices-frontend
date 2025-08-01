@@ -4,28 +4,7 @@ import { useGetBlogsQuery } from "@/redux/api/blogApi";
 import { ArrowUpRight, Calendar, Clock } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-
-interface WordPressBlog {
-  id: number;
-  date: string;
-  slug: string;
-  title: {
-    rendered: string;
-  };
-  content: {
-    rendered: string;
-  };
-  excerpt: {
-    rendered: string;
-  };
-  featured_media: number;
-  _embedded?: {
-    "wp:featuredmedia"?: {
-      source_url: string;
-      alt_text?: string;
-    }[];
-  };
-}
+import { WordPressPost } from "@/types/wordpress";
 
 export default function BlogSection() {
   const { data } = useGetBlogsQuery({});
@@ -55,7 +34,7 @@ export default function BlogSection() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          {blogPosts.map((post: WordPressBlog) => {
+          {blogPosts.map((post: WordPressPost) => {
             const readingTime = calculateReadingTime(post.content.rendered);
             
             return(

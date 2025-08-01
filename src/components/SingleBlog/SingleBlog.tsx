@@ -7,34 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { BeautifulPageLoading } from "../ui/BeautifulSpinner";
 import { Skeleton } from "antd";
-
-interface WordPressPost {
-  id: number;
-  date: string;
-  slug: string;
-  title: {
-    rendered: string;
-  };
-  content: {
-    rendered: string;
-  };
-  excerpt: {
-    rendered: string;
-  };
-  featured_media: number;
-  _links: {
-    "wp:featuredmedia"?: {
-      embeddable: boolean;
-      href: string;
-    }[];
-  };
-  _embedded?: {
-    "wp:featuredmedia"?: {
-      source_url: string;
-      alt_text?: string;
-    }[];
-  };
-}
+import { WordPressPost } from "@/types/wordpress";
 
 export default function SingleBlog() {
   const params = useParams();
@@ -115,6 +88,7 @@ export default function SingleBlog() {
   }
 
   return (
+    <>
     <div className="bg-white pt-16 lg:pt-28">
       <div className="container mx-auto px-4">
         {/* Breadcrumb Navigation */}
@@ -176,5 +150,6 @@ export default function SingleBlog() {
         </article>
       </div>
     </div>
+    </>
   );
 }

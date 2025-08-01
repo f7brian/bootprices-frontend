@@ -13,35 +13,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useGetBlogsQuery } from "@/redux/api/blogApi";
 import { BeautifulPageLoading } from "../ui/BeautifulSpinner";
+import { WordPressPost } from "@/types/wordpress";
 // import { BeautifulPageLoading } from "./ui/beautiful-spinner"
-
-interface WordPressBlog {
-  id: number;
-  date: string;
-  slug: string;
-  title: {
-    rendered: string;
-  };
-  content: {
-    rendered: string;
-  };
-  excerpt: {
-    rendered: string;
-  };
-  featured_media: number;
-  _links: {
-    "wp:featuredmedia"?: {
-      embeddable: boolean;
-      href: string;
-    }[];
-  };
-  _embedded?: {
-    "wp:featuredmedia"?: {
-      source_url: string;
-      alt_text?: string;
-    }[];
-  };
-}
 
 
 export default function BlogPage() {
@@ -96,7 +69,7 @@ export default function BlogPage() {
           <p className="text-center text-red-500">Failed to load blogs.</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {blogs.map((post: WordPressBlog) => {
+            {blogs.map((post: WordPressPost) => {
               const readingTime = calculateReadingTime(post.content.rendered);
 
               return (
