@@ -1,11 +1,10 @@
 /* @import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"); */
 
-@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 
 /* global.css */
 * {
@@ -16,17 +15,16 @@
 
 html {
   overflow-x: hidden;
- 
 }
 
 body {
-  font-family: "Roboto", sans-serif;
+  font-family: 'Roboto', sans-serif;
   /* font-family: "Poppins", serif; */
   /* background-color: #f5f5f5; */
   overflow-x: hidden;
   background-color: #ffffff;
   font-weight: bold;
-   margin: 0;
+  margin: 0;
   padding: 0;
   box-sizing: border-box;
   -webkit-font-smoothing: antialiased;
@@ -35,14 +33,11 @@ body {
   scroll-behavior: smooth;
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: inherit;
 }
-
-
-
-
-
 
 /* h1,
 h2,
@@ -55,7 +50,7 @@ h6 {
 } */
 
 .font-inter {
-  font-family: "Inter", serif;
+  font-family: 'Inter', serif;
 }
 
 .right {
@@ -248,6 +243,7 @@ h6 {
 }
 
 /* Paragraph Styles */
+.tinymce-content li,
 .tinymce-content p {
   margin: 1rem 0;
   /* line-height: 1.7; */
@@ -351,6 +347,10 @@ h6 {
   line-height: 1.6;
 }
 
+.tinymce-content li::marker {
+  font-size: 16px;
+}
+
 .tinymce-content li p {
   margin: 0.25rem 0;
 }
@@ -407,7 +407,7 @@ h6 {
 }
 
 .tinymce-content blockquote cite::before {
-  content: "— ";
+  content: '— ';
 }
 
 /* Code Styles */
@@ -416,7 +416,7 @@ h6 {
   color: #e11d48;
   padding: 0.125rem 0.375rem;
   border-radius: 0.25rem;
-  font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
   font-size: 0.875em;
   border: 1px solid #e2e8f0;
 }

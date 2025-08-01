@@ -1,25 +1,29 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { useParams } from "next/navigation";
 import { useGetSingleBlogQuery } from "@/redux/api/blogApi";
 import { Calendar } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { BeautifulPageLoading } from "../ui/BeautifulSpinner"; // Import your loading component
+import { BeautifulPageLoading } from "../ui/BeautifulSpinner";
 import { Skeleton } from "antd";
-// import { Skeleton } from "../ui/skeleton"; // Import skeleton component if available
-
-
+import { WordPressPost } from "@/types/wordpress";
 
 export default function SingleBlog() {
   const params = useParams();
-const slug = params?.slug as string;
+  const slug = params?.slug as string;
 
   // Use the slug for the API request
   const { data, isLoading, isError, error } = useGetSingleBlogQuery(slug);
 
-  const singleBlog = data?.data;
+  const singleBlog: WordPressPost | undefined = data;
+
+  // Helper function to extract text from HTML
+  const stripHtml = (html: string) => {
+    const tmp = document.createElement("DIV");
+    tmp.innerHTML = html;
+    return tmp.textContent || tmp.innerText || "";
+  };
 
   if (isLoading) {
     return (
@@ -70,7 +74,7 @@ const slug = params?.slug as string;
             Blog post not found
           </h2>
           <p className="text-gray-600 mb-6">
-            The blog post you`&apos;re looking for doesn`&apos;t exist or may have been removed.
+            The blog post you&apos;re looking for doesn&apos;t exist or may have been removed.
           </p>
           <Link
             href="/blog"
@@ -84,6 +88,7 @@ const slug = params?.slug as string;
   }
 
   return (
+    <>
     <div className="bg-white pt-16 lg:pt-28">
       <div className="container mx-auto px-4">
         {/* Breadcrumb Navigation */}
@@ -97,15 +102,15 @@ const slug = params?.slug as string;
               Blog
             </Link>
             <span>›</span>
-            <span className="text-gray-900">{singleBlog.title}</span>
+            <span className="text-gray-900">{singleBlog?.title?.rendered ? stripHtml(singleBlog.title.rendered) : 'Blog Post'}</span>
           </div>
         </nav>
 
         {/* Hero Image */}
         <div className="relative w-full h-64 md:h-80 lg:h-96 mb-8 rounded-lg overflow-hidden">
           <Image
-            src={singleBlog.photo || "/placeholder.svg"}
-            alt={singleBlog.title}
+            src={singleBlog._embedded?.["wp:featuredmedia"]?.[0]?.source_url || "/placeholder.svg"}
+            alt={singleBlog?.title?.rendered ? stripHtml(singleBlog.title.rendered) : 'Blog post image'}
             fill
             className="object-cover"
             priority
@@ -119,31 +124,32 @@ const slug = params?.slug as string;
             <Calendar className="h-4 w-4 mr-1" />
             <span>
               Published:{" "}
-              {singleBlog.date
+              {singleBlog?.date
                 ? new Date(singleBlog.date).toLocaleDateString(undefined, {
                     year: "numeric",
                     month: "long",
                     day: "numeric",
                   })
-                : ""}
+                : "Date not available"}
             </span>
           </div>
 
           {/* Title */}
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-8 leading-tight">
-            {singleBlog.title}
+            {singleBlog?.title?.rendered ? stripHtml(singleBlog.title.rendered) : 'Blog Post'}
           </h1>
 
           <section className="mb-8 prose max-w-none">
             <div
               className="tinymce-content"
               dangerouslySetInnerHTML={{
-                __html: singleBlog.description || "",
+                __html: singleBlog?.content?.rendered || "",
               }}
             />
           </section>
         </article>
       </div>
     </div>
+    </>
   );
 }
