@@ -2,22 +2,48 @@
 
 import { useGetBlogsQuery } from "@/redux/api/blogApi";
 import { ArrowUpRight, Calendar, Clock } from "lucide-react";
-import Image, { StaticImageData } from "next/image";
+import Image from "next/image";
 import Link from "next/link";
 
-interface allBlog {
-  id: string;
-  photo: StaticImageData | string;
-  title: string;
+interface WordPressBlog {
+  id: number;
   date: string;
-  time: string;
-  description: string;
-  slug: string
+  slug: string;
+  title: {
+    rendered: string;
+  };
+  content: {
+    rendered: string;
+  };
+  excerpt: {
+    rendered: string;
+  };
+  featured_media: number;
+  _embedded?: {
+    "wp:featuredmedia"?: {
+      source_url: string;
+      alt_text?: string;
+    }[];
+  };
 }
 
 export default function BlogSection() {
   const { data } = useGetBlogsQuery({});
-  const blogPosts = data?.data?.result?.slice(0, 3) || [];
+  const blogPosts = Array.isArray(data) ? data.slice(0, 3) : [];
+
+  // Helper function to extract text from HTML
+  const stripHtml = (html: string) => {
+    const tmp = document.createElement("DIV");
+    tmp.innerHTML = html;
+    return tmp.textContent || tmp.innerText || "";
+  };
+
+  // Helper function to calculate reading time
+  const calculateReadingTime = (content: string) => {
+    const wordsPerMinute = 200;
+    const wordCount = stripHtml(content).split(/\s+/).length;
+    return Math.ceil(wordCount / wordsPerMinute);
+  };
 
   return (
     <section className="py-16 md:py-20">
@@ -29,16 +55,17 @@ export default function BlogSection() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          {blogPosts.map((post: allBlog) => {
-            // const post.slug = encodeURIComponent(post.title);
-          return(
+          {blogPosts.map((post: WordPressBlog) => {
+            const readingTime = calculateReadingTime(post.content.rendered);
+            
+            return(
               <div key={post.id} className="mb-8">
               {/* Blog Image */}
               <div className="aspect-[4/3] relative mb-4 overflow-hidden">
                 <Link href={`/blog/${post.slug}`}>
                   <Image
-                    src={post.photo || "/placeholder.svg"}
-                    alt={post.title}
+                    src={post._embedded?.["wp:featuredmedia"]?.[0]?.source_url || "/placeholder.svg"}
+                    alt={stripHtml(post.title.rendered)}
                     fill
                     className="object-cover rounded-[4px]"
                   />
@@ -62,14 +89,14 @@ export default function BlogSection() {
                 </div>
                 <div className="flex items-center">
                   <Clock className="h-4 w-4 mr-1" />
-                  <span>{post.time} min read</span>
+                  <span>{readingTime} min read</span>
                 </div>
               </div>
 
               {/* Title */}
               <Link href={`/blog/${post.slug}`}>
                 <h2 className="text-xl font-bold text-black mb-2">
-                  {post.title}
+                  {stripHtml(post.title.rendered)}
                 </h2>
               </Link>
 
@@ -77,13 +104,13 @@ export default function BlogSection() {
               <div
                 className="text-gray-400 text-sm mb-3"
                 dangerouslySetInnerHTML={{
-                  __html: post.description.slice(0, 205) + " ...",
+                  __html: post.excerpt.rendered.slice(0, 205) + " ...",
                 }}
               />
 
-              {/* Read More Link (optional slug) */}
+              {/* Read More Link */}
               <Link
-                href={`/blog/${post.slug}`} // update this if using slug
+                href={`/blog/${post.slug}`}
                 className="inline-flex items-center text-black/90 hover:text-secondary text-sm font-medium"
               >
                 Read More
@@ -91,7 +118,7 @@ export default function BlogSection() {
               </Link>
             </div>
           )
-})}
+        })}
         </div>
 
         <div className="text-center">
