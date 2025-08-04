@@ -9,21 +9,12 @@ import {
   ChevronRight,
   Clock,
 } from "lucide-react";
-import Image, { type StaticImageData } from "next/image";
+import Image from "next/image";
 import Link from "next/link";
 import { useGetBlogsQuery } from "@/redux/api/blogApi";
 import { BeautifulPageLoading } from "../ui/BeautifulSpinner";
+import { WordPressPost } from "@/types/wordpress";
 // import { BeautifulPageLoading } from "./ui/beautiful-spinner"
-
-interface allBlog {
-  id: string;
-  photo: StaticImageData | string;
-  title: string;
-  date: string;
-  time: string;
-  description: string;
-  slug: string
-}
 
 
 export default function BlogPage() {
@@ -35,14 +26,32 @@ export default function BlogPage() {
     limit,
   });
 
-  const blogs = data?.data?.result || [];
-  const totalBlogs = data?.data?.meta?.total || 0;
-  const totalPages = data?.data?.meta?.totalPage || 1;
+  console.log("Blog data:", data);
+
+  const blogs = data || [];
+  const totalBlogs = Array.isArray(data) ? data.length : 0;
+  const totalPages = Math.ceil(totalBlogs / limit);
+
+  console.log("Total Blogs:", totalBlogs);
 
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
     }
+  };
+
+  // Helper function to extract text from HTML
+  const stripHtml = (html: string) => {
+    const tmp = document.createElement("DIV");
+    tmp.innerHTML = html;
+    return tmp.textContent || tmp.innerText || "";
+  };
+
+  // Helper function to calculate reading time
+  const calculateReadingTime = (content: string) => {
+    const wordsPerMinute = 200;
+    const wordCount = stripHtml(content).split(/\s+/).length;
+    return Math.ceil(wordCount / wordsPerMinute);
   };
 
   return (
@@ -60,17 +69,17 @@ export default function BlogPage() {
           <p className="text-center text-red-500">Failed to load blogs.</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {blogs.map((post: allBlog) => {
-              // const slug = createSlug(post?.title);
-          
+            {blogs.map((post: WordPressPost) => {
+              const readingTime = calculateReadingTime(post.content.rendered);
+
               return (
                 <div key={post.id} className="mb-8">
                   {/* Blog Image */}
                   <div className="aspect-[4/3] relative mb-4 overflow-hidden">
                     <Link href={`/blog/${post.slug}`}>
                       <Image
-                        src={post.photo || "/placeholder.svg"}
-                        alt={post.title}
+                        src={post._embedded?.["wp:featuredmedia"]?.[0]?.source_url || "/placeholder.svg"}
+                        alt={stripHtml(post.title.rendered)}
                         fill
                         className="object-cover rounded-[4px]"
                       />
@@ -89,22 +98,22 @@ export default function BlogPage() {
                     </div>
                     <div className="flex items-center">
                       <Clock className="h-4 w-4 mr-1" />
-                      <span>{post.time} min read</span>
+                      <span>{readingTime} min read</span>
                     </div>
                   </div>
 
                   {/* Title */}
                   <Link href={`/blog/${post.slug}`}>
                     <h2 className="text-xl font-bold text-black mb-2">
-                      {post.title}
+                      {stripHtml(post.title.rendered)}
                     </h2>
                   </Link>
 
                   {/* Description */}
                   <p
-                    className="text-gray-400  mb-3"
+                    className="text-gray-400 mb-3"
                     dangerouslySetInnerHTML={{
-                      __html: post.description.slice(0, 180) + "...",
+                      __html: post.excerpt.rendered.slice(0, 180) + "...",
                     }}
                   ></p>
 
