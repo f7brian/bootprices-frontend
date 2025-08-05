@@ -1,25 +1,26 @@
-import { configureStore } from "@reduxjs/toolkit";
-import { persistStore, persistReducer } from "redux-persist";
-import storage from "redux-persist/lib/storage";
-import adminAuth from "./ReduxFunction";
-import baseApi from "./api/baseApi";
-import stepLoginReducer from "@/redux/allSlice/stepLoginSlice";
+import stepLoginReducer from '@/redux/allSlice/stepLoginSlice';
+import { configureStore } from '@reduxjs/toolkit';
+import { persistReducer, persistStore } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
+import adminAuth from './ReduxFunction';
+import baseApi from './api/baseApi';
+import { wordpressApi } from './api/wordpressApi';
 
-import paymentIdreducer from "@/redux/allSlice/paymentSlice";
+import paymentIdreducer from '@/redux/allSlice/paymentSlice';
 
 // Persist configuration for `formData`
 const persistConfig = {
-  key: "root",
+  key: 'root',
   storage,
 };
 // Persist configuration for `formData`
 const payIdConfig = {
-  key: "payId",
+  key: 'payId',
   storage,
 };
 
 const stepLoginConfig = {
-  key: "payId",
+  key: 'payId',
   storage,
 };
 
@@ -36,15 +37,16 @@ export const store = configureStore({
     stepLogin: persistStepReducer,
     // Add API reducers
     [baseApi.reducerPath]: baseApi.reducer,
+    [wordpressApi.reducerPath]: wordpressApi.reducer,
     // [stripeApi.reducerPath]: stripeApi.reducer,
   },
-  middleware: (getDefaultMiddleware) =>
+  middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: ["persist/PERSIST", "persist/REHYDRATE"],
-        ignoredPaths: ["Auth.somePathWithNonSerializableValues"],
+        ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE'],
+        ignoredPaths: ['Auth.somePathWithNonSerializableValues'],
       },
-    }).concat(baseApi.middleware),
+    }).concat(baseApi.middleware, wordpressApi.middleware),
 });
 
 export const persistor = persistStore(store);

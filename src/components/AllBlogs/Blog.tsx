@@ -1,21 +1,20 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
 // import { useGetBlogsQuery } from "@/hooks/use-blogs"
+import { useGetBlogsQuery } from '@/redux/api/wordpressApi';
+import { WordPressPost } from '@/types/wordpress';
 import {
   ArrowUpRight,
   Calendar,
   ChevronLeft,
   ChevronRight,
   Clock,
-} from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { useGetBlogsQuery } from "@/redux/api/blogApi";
-import { BeautifulPageLoading } from "../ui/BeautifulSpinner";
-import { WordPressPost } from "@/types/wordpress";
+} from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { BeautifulPageLoading } from '../ui/BeautifulSpinner';
 // import { BeautifulPageLoading } from "./ui/beautiful-spinner"
-
 
 export default function BlogPage() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -26,13 +25,13 @@ export default function BlogPage() {
     limit,
   });
 
-  console.log("Blog data:", data);
+  console.log('Blog data:', data);
 
   const blogs = data || [];
   const totalBlogs = Array.isArray(data) ? data.length : 0;
   const totalPages = Math.ceil(totalBlogs / limit);
 
-  console.log("Total Blogs:", totalBlogs);
+  console.log('Total Blogs:', totalBlogs);
 
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
@@ -42,9 +41,9 @@ export default function BlogPage() {
 
   // Helper function to extract text from HTML
   const stripHtml = (html: string) => {
-    const tmp = document.createElement("DIV");
+    const tmp = document.createElement('DIV');
     tmp.innerHTML = html;
-    return tmp.textContent || tmp.innerText || "";
+    return tmp.textContent || tmp.innerText || '';
   };
 
   // Helper function to calculate reading time
@@ -78,7 +77,10 @@ export default function BlogPage() {
                   <div className="aspect-[4/3] relative mb-4 overflow-hidden">
                     <Link href={`/blog/${post.slug}`}>
                       <Image
-                        src={post._embedded?.["wp:featuredmedia"]?.[0]?.source_url || "/placeholder.svg"}
+                        src={
+                          post._embedded?.['wp:featuredmedia']?.[0]
+                            ?.source_url || '/placeholder.svg'
+                        }
                         alt={stripHtml(post.title.rendered)}
                         fill
                         className="object-cover rounded-[4px]"
@@ -90,10 +92,10 @@ export default function BlogPage() {
                   <div className="flex items-center justify-between space-x-4 text-gray-400 text-sm mb-2">
                     <div className="flex items-center">
                       <Calendar className="h-4 w-4 mr-1" />
-                      {new Date(post.date).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
+                      {new Date(post.date).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
                       })}
                     </div>
                     <div className="flex items-center">
@@ -113,7 +115,7 @@ export default function BlogPage() {
                   <p
                     className="text-gray-400 mb-3"
                     dangerouslySetInnerHTML={{
-                      __html: post.excerpt.rendered.slice(0, 180) + "...",
+                      __html: post.excerpt.rendered.slice(0, 180) + '...',
                     }}
                   ></p>
 
@@ -135,7 +137,7 @@ export default function BlogPage() {
         {!isLoading && blogs.length > 0 && (
           <div className="mt-12 flex items-center justify-between">
             <div className="text-sm text-gray-400">
-              Showing <span className="font-medium">{blogs.length}</span> out of{" "}
+              Showing <span className="font-medium">{blogs.length}</span> out of{' '}
               <span className="font-medium">{totalBlogs}</span>
             </div>
 
@@ -155,8 +157,8 @@ export default function BlogPage() {
                   onClick={() => handlePageChange(index + 1)}
                   className={`w-10 h-10 flex items-center justify-center rounded ${
                     currentPage === index + 1
-                      ? "bg-secondary text-white"
-                      : "border border-secondary text-gray-400 hover:bg-secondary hover:text-white"
+                      ? 'bg-secondary text-white'
+                      : 'border border-secondary text-gray-400 hover:bg-secondary hover:text-white'
                   }`}
                 >
                   {index + 1}
