@@ -697,8 +697,3 @@ h6 {
 [id] {
   scroll-margin-top: var(--header-height);
 }
-
-/* Helps smooth scroll behavior */
-html {
-  scroll-padding-top: var(--header-height);
-}
