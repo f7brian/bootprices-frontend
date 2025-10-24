@@ -688,3 +688,17 @@ h6 {
     page-break-after: avoid;
   }
 }
+
+:root {
+  --header-height: 166px; /* adjust to your sticky header height */
+}
+
+/* Offset anchor scroll so headings aren't hidden by sticky header */
+[id] {
+  scroll-margin-top: var(--header-height);
+}
+
+/* Helps smooth scroll behavior */
+html {
+  scroll-padding-top: var(--header-height);
+}
